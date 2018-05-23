@@ -1,0 +1,6 @@
+HTTP/1.1 500 Fail on purpose
+Access-Control-Allow-Origin: *
+Timing-Allow-Origin: *
+X-Content-Type-Options: nosniff
+Server: sffe
+X-XSS-Protection: 1; mode=block

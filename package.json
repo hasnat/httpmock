@@ -1,0 +1,28 @@
+{
+  "name": "httpmock",
+  "version": "1.0.0",
+  "description": "Mocks http requests to predefined results",
+  "main": "index.js",
+  "scripts": {
+    "start": "node -r esm ./index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tj/parse-curl.js.git"
+  },
+  "author": "Hasnat Ullah",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.4",
+    "esm": "^3.0.36",
+    "express": "^4.16.3",
+    "glob": "^7.1.2",
+    "is-webview": "^1.0.1",
+    "lodash": "^4.17.10",
+    "lodash-es": "^4.17.10",
+    "parse-curl": "^0.2.6",
+    "parse-filepath": "^1.0.2",
+    "request-as-curl": "^0.1.0"
+  }
+}

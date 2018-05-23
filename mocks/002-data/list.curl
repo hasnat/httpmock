@@ -1,0 +1,14 @@
+curl 'http://example.com/data/' \
+-H 'Pragma: no-cache' \
+-H 'Origin: http://localhost:8080' \
+-H 'Accept-Encoding: gzip, deflate, sdch' \
+-H 'Accept-Language: en-US,en;q=0.8' \
+-H 'Api-Mock-State: PASS' \
+-H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36' \
+-H 'content-type: application/json' \
+-H 'accept: application/json' \
+-H 'Cache-Control: no-cache' \
+-H 'x-auth-token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0QGJycy5jb20iLCJqdGkiOiI0ODgxNmNmYi01NzJhLTRmNmItODUwYS0wOTMzNjZmYTc4NWQiLCJleHAiOjE0NDQwNzczNTEsInVzZXJpZCI6IjgiLCJmbmFtZSI6InJlZ2dpZSIsImxuYW1lIjoic21pdGgiLCJwYyI6dHJ1ZSwicm9sZXMiOlsiVVNFUiJdfQ.Opuf8y0l8JPnsPqOHqupcSADaydYlvgANBIfNsP8PHSHC7B7AMCNY8ZpmgCPwZ-Sq_FUXq9BWsrvoDfFZ_xWfQ' \
+-H 'Referer: http://localhost:8080/' \
+-H 'Connection: keep-alive' \
+--compressed
