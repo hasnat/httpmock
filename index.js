@@ -1,6 +1,6 @@
 import parseCurl from 'parse-curl';
 import requestAsCurl from 'request-as-curl';
-import {omit, mapKeys, isEqual, toLower} from 'lodash';
+import {omit, pick, mapKeys, isEqual, toLower} from 'lodash';
 import express from 'express';
 import {promisify} from 'util';
 import {readFile, exists as fileExists} from 'fs';
@@ -38,7 +38,7 @@ const responseForRequest = async (req) => {
         const testRequest = parseCurlRequest(await fsReadFile(fileFullPath, 'utf-8'));
 
         if (!useStrictComparison) {
-            testRequest.header = omit(testRequest.header, Object.keys(reqParsed.header).map(toLower));
+            testRequest.header = pick(testRequest.header, Object.keys(reqParsed.header).map(toLower));
         }
 
         if (isEqual(testRequest, reqParsed)) {
@@ -50,7 +50,7 @@ const responseForRequest = async (req) => {
 
                 return {header, status, response};
             } catch (e) {
-                console.err(e)
+                console.error(e);
                 return {header: {}, status: 500, response: e.message};
             }
         }
