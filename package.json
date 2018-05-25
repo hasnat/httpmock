@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/tj/parse-curl.js.git"
+    "url": "https://github.com/hasnat/httpmock.git"
   },
   "author": "Hasnat Ullah",
   "license": "ISC",
