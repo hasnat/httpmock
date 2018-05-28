@@ -9,6 +9,5 @@ RUN npm install
 COPY . .
 
 EXPOSE 3000
-VOLUME ["/usr/local/project/app/mocks"]
 
 ENTRYPOINT ["npm", "start"]
