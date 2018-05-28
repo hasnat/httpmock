@@ -8,7 +8,8 @@ import {sync as globSync} from 'glob';
 import cors from 'cors';
 import {parse as urlParse} from 'url';
 import parsePath from 'parse-filepath';
-import ignoreHeaders from './ignoreHeaders.json';
+import ignoreRequestHeaders from './ignoreRequestHeaders.json';
+import ignoreResponseHeaders from './ignoreResponseHeaders.json';
 
 const fsReadFile = promisify(readFile);
 const fsExists = promisify(fileExists);
@@ -71,9 +72,15 @@ const parseRawResponseHeaders = (responseString) => {
 
         const matchedResponseHeader = /([^:]+): (.*)/.exec(header);
         if (matchedResponseHeader) {
-            responseHeaders.header[matchedResponseHeader[1].trim()] = matchedResponseHeader[2].trim();
+            const headerName = matchedResponseHeader[1].trim();
+            const headerValue = matchedResponseHeader[2].trim();
+            if (headerName.toLowerCase() === 'status') {
+                responseHeaders.status = headerValue;
+            }
+            responseHeaders.header[headerName] = headerValue;
         }
     });
+    responseHeaders.header = omit(responseHeaders.header, ignoreResponseHeaders.map(toLower));
 
     return responseHeaders;
 };
@@ -83,7 +90,7 @@ const parseCurlRequest = (curlRequest) => {
     requestParsed.uri = urlParse(requestParsed.url).pathname;
     delete requestParsed.url;
     requestParsed.header = mapKeys(requestParsed.header, (v, k) => toLower(k));
-    requestParsed.header = omit(requestParsed.header, ignoreHeaders.map(toLower));
+    requestParsed.header = omit(requestParsed.header, ignoreRequestHeaders.map(toLower));
 
     return requestParsed;
 };
