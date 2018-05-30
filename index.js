@@ -14,9 +14,10 @@ import ignoreResponseHeaders from './ignoreResponseHeaders.json';
 const fsReadFile = promisify(readFile);
 const fsExists = promisify(fileExists);
 const port = process.env.HTTP_PORT || 3000;
+const DEBUG = typeof process.env.DEBUG !== undefined ? process.env.DEBUG : true;
 const useStrictComparison = process.env.USE_STRICT_COMPARISON === 'true';
 const app = express();
-
+const debugMessage = DEBUG ? console.log : f => f;
 app.use(cors());
 
 app.all('*', async function(req, res) {
@@ -32,6 +33,8 @@ app.listen(port, () => {
 
 const responseForRequest = async (req) => {
     const reqParsed = parseCurlRequest(requestAsCurl(req));
+    debugMessage('====================================');
+    debugMessage('checking for request => ', reqParsed);
     const mockCurlFiles = globSync('./mocks/**/*.curl');
 
     for(const mockCurlFileIndex in mockCurlFiles) {
@@ -41,8 +44,10 @@ const responseForRequest = async (req) => {
         if (!useStrictComparison) {
             testRequest.header = pick(testRequest.header, Object.keys(reqParsed.header).map(toLower));
         }
+        debugMessage(`comparing with request ${fileFullPath} => `, testRequest);
 
         if (isEqual(testRequest, reqParsed)) {
+            debugMessage(`matched =>  ${fileFullPath}`);
             try {
                 const {dirname, name} = parsePath(fileFullPath);
                 const responseFile = `./${dirname}/${name}`;
@@ -56,6 +61,8 @@ const responseForRequest = async (req) => {
             }
         }
     }
+
+    debugMessage('No requests matched, returning 404');
 
     return {header: {}, status: 404, response: '404'};
 };
