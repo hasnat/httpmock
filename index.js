@@ -16,6 +16,7 @@ const fsExists = promisify(fileExists);
 const port = process.env.HTTP_PORT || 3000;
 const DEBUG = typeof process.env.DEBUG !== undefined ? process.env.DEBUG : true;
 const useStrictComparison = process.env.USE_STRICT_COMPARISON === 'true';
+const ignoreQueryString = process.env.IGNORE_QUERY_STRING === 'true';
 const app = express();
 const debugMessage = DEBUG ? console.log : f => f;
 app.use(cors());
@@ -95,6 +96,7 @@ const parseRawResponseHeaders = (responseString) => {
 const parseCurlRequest = (curlRequest) => {
     const requestParsed = parseCurl(curlRequest);
     requestParsed.uri = urlParse(requestParsed.url).pathname;
+    ignoreQueryString || (requestParsed.query = urlParse(requestParsed.url, true).query || {});
     delete requestParsed.url;
     requestParsed.header = mapKeys(requestParsed.header, (v, k) => toLower(k));
     requestParsed.header = omit(requestParsed.header, ignoreRequestHeaders.map(toLower));
