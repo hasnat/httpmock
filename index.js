@@ -8,6 +8,8 @@ import {sync as globSync} from 'glob';
 import cors from 'cors';
 import {parse as urlParse} from 'url';
 import parsePath from 'parse-filepath';
+import bodyParser from 'body-parser';
+
 import ignoreRequestHeaders from './ignoreRequestHeaders.json';
 import ignoreResponseHeaders from './ignoreResponseHeaders.json';
 
@@ -20,6 +22,8 @@ const ignoreQueryString = process.env.IGNORE_QUERY_STRING === 'true';
 const app = express();
 const debugMessage = DEBUG ? console.log : f => f;
 app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true })); // TODO: support post data similar as json body
 
 app.all('*', async function(req, res) {
     const {status, header, response} = await responseForRequest(req);
@@ -33,7 +37,11 @@ app.listen(port, () => {
 });
 
 const responseForRequest = async (req) => {
+    debugMessage('checking for request => ', requestAsCurl(req));
     const reqParsed = parseCurlRequest(requestAsCurl(req));
+    if (req.body) {
+        reqParsed.body = req.body;
+    }
     debugMessage('====================================');
     debugMessage('checking for request => ', reqParsed);
     const mockCurlFiles = globSync('./mocks/**/*.curl');
@@ -95,6 +103,11 @@ const parseRawResponseHeaders = (responseString) => {
 
 const parseCurlRequest = (curlRequest) => {
     const requestParsed = parseCurl(curlRequest);
+    if (requestParsed.body) {
+        try {
+            requestParsed.body = JSON.parse(requestParsed.body);
+        } catch (e) {}
+    }
     requestParsed.uri = urlParse(requestParsed.url).pathname;
     ignoreQueryString || (requestParsed.query = urlParse(requestParsed.url, true).query || {});
     delete requestParsed.url;
