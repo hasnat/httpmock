@@ -39,9 +39,7 @@ app.listen(port, () => {
 const responseForRequest = async (req) => {
     debugMessage('checking for request => ', requestAsCurl(req));
     const reqParsed = parseCurlRequest(requestAsCurl(req));
-    if (req.body) {
-        reqParsed.body = req.body;
-    }
+    reqParsed.body = req.body;      // this defaults to {} on every request
     debugMessage('====================================');
     debugMessage('checking for request => ', reqParsed);
     const mockCurlFiles = globSync('./mocks/**/*.curl');
@@ -108,6 +106,7 @@ const parseCurlRequest = (curlRequest) => {
             requestParsed.body = JSON.parse(requestParsed.body);
         } catch (e) {}
     }
+    requestParsed.body = requestParsed.body || {};
     requestParsed.uri = urlParse(requestParsed.url).pathname;
     ignoreQueryString || (requestParsed.query = urlParse(requestParsed.url, true).query || {});
     delete requestParsed.url;
