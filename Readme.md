@@ -1,5 +1,7 @@
 ### HttpMock
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/hasnat/httpmock.svg)](https://greenkeeper.io/)
+
 Mocks http requests as specified in mocks directory
 
 Please check mocks directory for samples
